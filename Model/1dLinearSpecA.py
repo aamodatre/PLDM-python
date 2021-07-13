@@ -51,9 +51,11 @@ def initR():
     R0 = 0.0
     P0 = 0.0
     ωg = parameters.ωg
-    β = 10**6
+    # β = 10**6
     
-    sigP = np.sqrt( ωg / ( 2 * np.tanh( 0.5*β*ωg ) ) )
+    # sigP = np.sqrt( ωg / ( 2 * np.tanh( 0.5*β*ωg ) ) )
+    
+    sigP = np.sqrt( ωg / 2 ) # In the limit T = 0 K
     sigR = sigP/ωg
  
     R = np.random.normal()*sigR + R0
