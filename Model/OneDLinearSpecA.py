@@ -26,8 +26,8 @@ def Hel(R):
     D = parameters.D
     m = parameters.M
     epsilon = 5
-    VMat = np.zeros((2,2))
 
+    VMat = np.zeros((2,2))
     VMat[0,0] = 0.5*m*(ωg**2)*(R**2)
     VMat[1,1] = 0.5*m*(ωe**2)*((R-D)**2) + epsilon
 
@@ -39,9 +39,8 @@ def dHel(R):
     ωe = parameters.ωe
     D = parameters.D
     m = parameters.M
-    epsilon = 5
-    dVMat = np.zeros((2,2,1))
 
+    dVMat = np.zeros((2,2,1))
     dVMat[0,0,0] = m*(ωg**2)*(R)
     dVMat[1,1,0] = m*(ωe**2)*((R-D))
 
