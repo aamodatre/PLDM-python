@@ -7,7 +7,8 @@ class parameters():
    dtE = dtN/20
    NStates = 2
    M = 2000
-   initState = 0
+   initStatef = 0
+   initStateb = 0
    nskip = 5
 
 def Hel(R):

@@ -7,14 +7,14 @@ import numpy as np
 
 class parameters():
    NSteps = 600 #int(2*10**6)
-   NTraj = 500
+   NTraj = 1
    dtN = 2
    dtE = dtN/20
    NStates = 2
    M = 1728.26
    initStatef = 1
    initStateb = 0
-   nskip = 1
+   nskip = 5
    ωg = 0.013669
    ωe = 0.99*ωg
    D = 0.2
