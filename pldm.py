@@ -38,6 +38,7 @@ def initMapping(Nstates, initStatef = 0, initStateb = 0, stype = "focused"):
         qB[initStateb] = 1.0
         pF[initStatef] = 1.0
         pB[initStateb] = -1.0 # This minus sign allows for backward motion of fictitious oscillator
+        
     # elif (stype == "sampled"):
     #    qF = np.array([ np.random.normal() for i in range(Nstates)]) 
     #    qB = np.array([ np.random.normal() for i in range(Nstates)]) 
@@ -46,43 +47,28 @@ def initMapping(Nstates, initStatef = 0, initStateb = 0, stype = "focused"):
     return qF, qB, pF, pB 
 
 def Umap(qF, qB, pF, pB, dt, VMat):
-    NStates = len(qB)
     qFin, qBin, pFin, pBin = qF * 1.0, qB * 1.0, pF * 1.0, pB * 1.0 # Store input position and momentum for verlet propogation
 
     # Store initial array containing sums to use at second derivative step
-
-    # VMatxqB =  VMat @ qBin #np.array([np.sum(VMat[k,:] * qBin[:]) for k in range(NStates)])
-    # VMatxqF =  VMat @ qFin #np.array([np.sum(VMat[k,:] * qFin[:]) for k in range(NStates)])
-    
-    """Is this not just a Dot Product ?"""
-    VMatxqB =  np.array([np.sum(VMat[k,:] * qBin[:]) for k in range(NStates)]) 
-    VMatxqF =  np.array([np.sum(VMat[k,:] * qFin[:]) for k in range(NStates)])
+    VMatxqB =  VMat @ qBin #np.array([np.sum(VMat[k,:] * qBin[:]) for k in range(NStates)])
+    VMatxqF =  VMat @ qFin #np.array([np.sum(VMat[k,:] * qFin[:]) for k in range(NStates)])
     
     # Update momenta using input positions (first-order in dt)
     pB -= 0.5 * dt * VMatxqB  # VMat @ qBin  
     pF -= 0.5 * dt * VMatxqF  # VMat @ qFin  
     # Now update positions with input momenta (first-order in dt)
     
-    # qB += dt * VMat @ pBin  
-    # qF += dt * VMat @ pFin  
-
-    qB += dt * (np.array([np.sum(VMat[k,:] * pBin[:]) for k in range(NStates)]))
-    qF += dt * (np.array([np.sum(VMat[k,:] * pFin[:]) for k in range(NStates)]))
+    qB += dt * VMat @ pBin  
+    qF += dt * VMat @ pFin  
     
     # Update positions to second order in dt
-    # qB -=  (dt**2/2.0) * VMat @ VMatxqB 
-    # qF -=  (dt**2/2.0) * VMat @ VMatxqF
-
-    qB -=  (dt**2/2.0) * (np.array([np.sum(VMat[k,:] * VMatxqB[:]) for k in range(NStates)]))
-    qF -=  (dt**2/2.0) * (np.array([np.sum(VMat[k,:] * VMatxqF[:]) for k in range(NStates)]))
+    qB -=  (dt**2/2.0) * VMat @ VMatxqB 
+    qF -=  (dt**2/2.0) * VMat @ VMatxqF
 
        #-----------------------------------------------------------------------------
     # Update momenta using output positions (first-order in dt)
-    # pB -= 0.5 * dt * VMat @ qB  
-    # pF -= 0.5 * dt * VMat @ qF  
-
-    pB -= 0.5 * dt  * (np.array([np.sum(VMat[k,:] * qB[:]) for k in range(NStates)]))
-    pF -= 0.5 * dt  * (np.array([np.sum(VMat[k,:] * qF[:]) for k in range(NStates)]))
+    pB -= 0.5 * dt * VMat @ qB  
+    pF -= 0.5 * dt * VMat @ qF  
 
     return qF, qB, pF, pB
 

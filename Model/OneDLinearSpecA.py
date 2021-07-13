@@ -6,15 +6,15 @@ import numpy as np
 
 
 class parameters():
-   NSteps = 600 #int(2*10**6)
-   NTraj = 1
-   dtN = 2
+   NSteps = 500 #int(2*10**6)
+   NTraj = 10
+   dtN = 1
    dtE = dtN/20
    NStates = 2
    M = 1728.26
    initStatef = 1
    initStateb = 0
-   nskip = 5
+   nskip = 1
    ωg = 0.013669
    ωe = 0.99*ωg
    D = 0.2
@@ -30,9 +30,10 @@ def Hel(R):
     VMat = np.zeros((2,2))
     VMat[0,0] = 0.5*m*(ωg**2)*(R**2)
     VMat[1,1] = 0.5*m*(ωe**2)*((R-D)**2) + epsilon
-
+    V0 = (VMat[0,0]+VMat[1,1])/2.
+    VMat[0,0] = VMat[0,0] - V0
+    VMat[1,1] = VMat[1,1] - V0
     return VMat
-
 
 def dHel(R):
     ωg = parameters.ωg
