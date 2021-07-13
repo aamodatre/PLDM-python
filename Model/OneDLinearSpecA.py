@@ -7,13 +7,13 @@ import numpy as np
 
 class parameters():
    NSteps = 600 #int(2*10**6)
-   NTraj = 10
+   NTraj = 500
    dtN = 2
    dtE = dtN/20
    NStates = 2
    M = 1728.26
-   initStatef = 0
-   initStateb = 1
+   initStatef = 1
+   initStateb = 0
    nskip = 1
    ωg = 0.013669
    ωe = 0.99*ωg
@@ -45,6 +45,9 @@ def dHel(R):
     dVMat[1,1,0] = m*(ωe**2)*((R-D))
 
     return dVMat
+
+def dHel0(R):
+    return 0
 
 def initR():
     R0 = 0.0
