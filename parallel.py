@@ -10,9 +10,7 @@ sys.path.append(os.popen("pwd").read().replace("\n",""))
 sys.path.append(os.popen("pwd").read().replace("\n","")+"/Model")
 #-------------------------
 import pldm as method
-# import tully1 as model
-# import tully2 as model
-import tully3 as model
+import OneDLinearSpecA as model
 stype = 'focused'
 #-------------------------
 from multiprocessing import Pool
