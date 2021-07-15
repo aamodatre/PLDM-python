@@ -5,6 +5,6 @@ os.mkdir("RUN")
 for i in range(fold):
 
     os.mkdir(f"RUN/run-{i}")
-#    os.system(f"sbatch parallel.py RUN/run-{i}")
-    os.system(f"python3 parallel.py RUN/run-{i}")
+    os.system(f"sbatch parallel.py RUN/run-{i}")
+    # os.system(f"python3 parallel.py RUN/run-{i}")
     

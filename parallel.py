@@ -74,14 +74,14 @@ for i in range(procs):
         rho_sum[:,:,t] += rho_ensemble[i][:,:,t]
 
 
-PiiFile = open(f"{fold}/Pii.txt","w") 
-NTraj = model.parameters().NTraj
-for t in range(rho_ensemble[0].shape[-1]):
-    PiiFile.write(f"{t * model.parameters.nskip * model.parameters.dtN} \t")
-    for i in range(NStates):
-        PiiFile.write(str(rho_sum[i,i,t].real / (  procs * NTraj ) ) + "\t")
-    PiiFile.write("\n")
-PiiFile.close()
+# PiiFile = open(f"{fold}/Pii.txt","w") 
+# NTraj = model.parameters().NTraj
+# for t in range(rho_ensemble[0].shape[-1]):
+#     PiiFile.write(f"{t * model.parameters.nskip * model.parameters.dtN} \t")
+#     for i in range(NStates):
+#         PiiFile.write(str(rho_sum[i,i,t].real / (  procs * NTraj ) ) + "\t")
+#     PiiFile.write("\n")
+# PiiFile.close()
 
 PijFile = open(f"{fold}/Pij.txt","w") 
 NTraj = model.parameters().NTraj

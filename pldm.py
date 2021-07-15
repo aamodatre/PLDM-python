@@ -96,6 +96,7 @@ def VelVer(dat) : # R, P, qF, qB, pF, pB, dtI, dtE, F1, Hij,M=1): # Ionic positi
     # half-step mapping
     for t in range(EStep):
         qF, qB, pF, pB = Umap(qF, qB, pF, pB, par.dtE/2.0, dat.Hij)
+        dat.rho[:,:,dat.istep*dat.ESteps + t] =  pop(dat)
     dat.qF, dat.qB, dat.pF, dat.pB = qF * 1, qB * 1, pF * 1, pB * 1 
 
     # ======= Nuclear Block ==================================
@@ -136,6 +137,7 @@ def runTraj(parameters):
     ## Parameters -------------
     NSteps = parameters.NSteps
     NTraj = parameters.NTraj
+    ESteps = parameters.ESteps
     NStates = parameters.NStates
     initStatef = parameters.initStatef # intial state
     initStateb = parameters.initStateb # intial state
@@ -146,12 +148,13 @@ def runTraj(parameters):
         pl = 0
     else :
         pl = 1
-    rho_ensemble = np.zeros((NStates,NStates,NSteps//nskip + pl), dtype=complex)
+    rho_ensemble = np.zeros((NStates,NStates,NSteps*ESteps//nskip + pl), dtype=complex)
     # Ensemble
     for itraj in range(NTraj): 
         # Trajectory data
         dat = Bunch(param =  parameters )
         dat.R, dat.P = parameters.initR()
+        dat.rho = rho_ensemble*0 
 
         # set propagator
         vv  = VelVer
@@ -170,12 +173,14 @@ def runTraj(parameters):
         #----------------------------
         iskip = 0 # please modify
         for i in range(NSteps): # One trajectory
+            dat.istep = i
             #------- ESTIMATORS-------------------------------------
-            if (i % nskip == 0):
-                rho_ensemble[:,:,iskip] += pop(dat)
-                iskip += 1
+            # if (i % nskip == 0):
+            #     rho_ensemble[:,:,iskip] += pop(dat)
+            #     iskip += 1
             #-------------------------------------------------------
             dat = vv(dat)
+        rho_ensemble += dat.rho    
 
     return rho_ensemble
 

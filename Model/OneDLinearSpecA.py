@@ -7,9 +7,10 @@ import numpy as np
 
 class parameters():
    NSteps = 500 #int(2*10**6)
-   NTraj = 10
-   dtN = 1
-   dtE = dtN/20
+   ESteps = 20
+   NTraj = 1000
+   dtN = 0.2
+   dtE = dtN/ESteps
    NStates = 2
    M = 1728.26
    initStatef = 1
