@@ -42,13 +42,15 @@ def dHel(R):
     m = parameters.M
 
     dVMat = np.zeros((2,2,1))
-    dVMat[0,0,0] = m*(ωg**2)*(R)
-    dVMat[1,1,0] = m*(ωe**2)*((R-D))
-
+    # dVMat[0,0,0] = m*(ωg**2)*(R)
+    dVMat[1,1,0] = m*(ωe**2)*((R-D)) - m*(ωg**2)*(R)
+    
     return dVMat
 
 def dHel0(R):
-    return 0
+    ωg = parameters.ωg
+    m = parameters.M
+    return m*(ωg**2)*(R)
 
 def initR():
     R0 = 0.0
