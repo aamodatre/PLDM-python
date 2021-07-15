@@ -86,14 +86,14 @@ for i in range(procs):
 PijFile = open(f"{fold}/Pij.txt","w") 
 NTraj = model.parameters().NTraj
 for t in range(rho_ensemble[0].shape[-1]):
-    PijFile.write(f"{t * model.parameters.nskip * model.parameters.dtN} \t")
+    PijFile.write(f"{t * model.parameters.nskip * model.parameters.dtE/2} \t")
     for i in range(NStates):
         for j in range(NStates):
                 PijFile.write(str(rho_sum[i,j,t].real / (  procs * NTraj ) ) + "\t")
                 PijFile.write(str(rho_sum[i,j,t].imag / (  procs * NTraj ) ) + "\t")
     PijFile.write("\n")
 PijFile.close()
-    
+
 t2 = time.time()-t1
 print(f"Total Time: {t2}")
 print(f"Time per trajectory: {t2/ntraj}")

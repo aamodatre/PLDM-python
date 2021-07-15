@@ -96,8 +96,8 @@ def VelVer(dat) : # R, P, qF, qB, pF, pB, dtI, dtE, F1, Hij,M=1): # Ionic positi
     # half-step mapping
     for t in range(EStep):
         qF, qB, pF, pB = Umap(qF, qB, pF, pB, par.dtE/2.0, dat.Hij)
-        dat.rho[:,:,dat.istep*dat.ESteps + t] =  pop(dat)
-    dat.qF, dat.qB, dat.pF, dat.pB = qF * 1, qB * 1, pF * 1, pB * 1 
+        dat.qF, dat.qB, dat.pF, dat.pB = qF * 1, qB * 1, pF * 1, pB * 1 
+        dat.rho[:,:,dat.istep*dat.param.ESteps*2 + t] =  pop(dat)
 
     # ======= Nuclear Block ==================================
     F1    =  Force(dat) # force with {qF(t+dt/2)} * dH(R(t))
@@ -118,7 +118,8 @@ def VelVer(dat) : # R, P, qF, qB, pF, pB, dtI, dtE, F1, Hij,M=1): # Ionic positi
     dat.Hij = par.Hel(dat.R) # do QM
     for t in range(EStep):
         qF, qB, pF, pB = Umap(qF, qB, pF, pB, par.dtE/2.0, dat.Hij)
-    dat.qF, dat.qB, dat.pF, dat.pB = qF, qB, pF, pB 
+        dat.qF, dat.qB, dat.pF, dat.pB = qF, qB, pF, pB 
+        dat.rho[:,:,dat.istep*dat.param.ESteps*2 + t + dat.param.ESteps] =  pop(dat)
     
     return dat
 
@@ -148,7 +149,7 @@ def runTraj(parameters):
         pl = 0
     else :
         pl = 1
-    rho_ensemble = np.zeros((NStates,NStates,NSteps*ESteps//nskip + pl), dtype=complex)
+    rho_ensemble = np.zeros((NStates,NStates,NSteps*ESteps*2//nskip + pl), dtype=complex)
     # Ensemble
     for itraj in range(NTraj): 
         # Trajectory data

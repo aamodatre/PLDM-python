@@ -6,10 +6,10 @@ import numpy as np
 
 
 class parameters():
-   NSteps = 500 #int(2*10**6)
    ESteps = 20
+   NSteps = 1000 #int(2*10**6)
    NTraj = 1000
-   dtN = 0.2
+   dtN = 1
    dtE = dtN/ESteps
    NStates = 2
    M = 1728.26
