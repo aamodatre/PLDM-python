@@ -9,8 +9,8 @@ from scipy import constants as sc
 
 class parameters():
    ESteps = 20
-   NSteps = 1000 #int(2*10**6)
-   NTraj = 1000
+   NSteps = 42000 #int(2*10**6)
+   NTraj = 1200
    dtN = 1
    dtE = dtN/ESteps
    nskip = 1
@@ -30,7 +30,7 @@ class parameters():
    # TrE[µ(t) (µ01|1><0| +  µ02|2><0|) ] - TrE[µ(t) (µ01|0><1| +  µ02|0><2|) ]
 
    initStatef = 2
-   initStateb = 0
+   initStateb = 2
 
    Eh2c = 219474.6313632   # Hartree -> cm inverse
    
