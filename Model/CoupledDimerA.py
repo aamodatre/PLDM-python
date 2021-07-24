@@ -17,8 +17,8 @@ class parameters():
    NStates = 4
    
    # cj and ωj is an array of dimensions (400,1)
-   cj = np.loadtxt("./../Discretization/cj.txt")
-   ωj = np.loadtxt("./../Discretization/ωj.txt")
+   cj = np.loadtxt("/scratch/aatre3/NAMD/PLDM-python/Discretization/cj.txt")
+   ωj = np.loadtxt("/scratch/aatre3/NAMD/PLDM-python/Discretization/ωj.txt")
    ndof = len(cj)
 
    """ Temporary derivation """
@@ -30,7 +30,7 @@ class parameters():
    # TrE[µ(t) (µ01|1><0| +  µ02|2><0|) ] - TrE[µ(t) (µ01|0><1| +  µ02|0><2|) ]
 
    initStatef = 2
-   initStateb = 2
+   initStateb = 0
 
    Eh2c = 219474.6313632   # Hartree -> cm inverse
    
@@ -113,4 +113,4 @@ def initR():
    R = np.random.normal(R0, sigR, size = parameters.ndof)
    P = np.random.normal(P0, sigP, size = parameters.ndof)
 
-   return np.array([R]), np.array([P])
+   return R, P
