@@ -4,17 +4,21 @@ import matplotlib.pyplot as plt
 
 def J(ω):
     ωc = 0.000082014 # 18 cm-1 in Hartree
+    # λ = 0.000045563 # 10 cm-1 in Hartree
     λ = 0.00022782 # 50 cm-1 in Hartree
+    # λ = 0.00068345 # 150 cm-1 in Hartree
     return 2*λ*((ω/ωc)/ (1+(ω/ωc)**2))
 
 def getParameters(N, Jω):
     
     # Spectral Density Parameters
     ωc = 0.000082014 # 18 cm-1 in Hartree
+    # λ = 0.000045563 # 10 cm-1 in Hartree
     λ = 0.00022782 # 50 cm-1 in Hartree
+    # λ = 0.00068345 # 150 cm-1 in Hartree
 
     # Frequencies considered
-    ω = np.linspace(0.00000001,250*ωc,30000) # upper limit - reconsider
+    ω = np.linspace(0.00000001,250*ωc,30000) # upper limit -
     dω = ω[1] - ω[0]
     Jω = Jω(ω)
 
@@ -51,18 +55,20 @@ N = 100
 
 ωj, cj = getParameters(N,J)
 
-ω = np.zeros((400))
-c = np.zeros((400))
+# ω = np.zeros((400))
+# c = np.zeros((400))
 
-ω[:100] = ωj
-ω[100:200] = ωj
-ω[200:300] = ωj
-ω[300:400] = ωj
+# ω[:100] = ωj
+# ω[100:200] = ωj
+# ω[200:300] = ωj
+# ω[300:400] = ωj
 
-c[:100] = 0
-c[100:200] =  cj
-c[200:300] =  cj
-c[300:400] =  2 * cj
+# c[:100] = 0
+# c[100:200] =  cj
+# c[200:300] =  cj
+# c[300:400] =  2 * cj
 
-np.savetxt("ωj.txt", ω)
-np.savetxt("cj.txt", c)
+
+
+np.savetxt("ωj.txt", ωj)
+np.savetxt("cj.txt", cj)

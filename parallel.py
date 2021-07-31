@@ -2,7 +2,7 @@
 #SBATCH -p action 
 #SBATCH -o output.log
 #SBATCH --mem-per-cpu=1GB
-#SBATCH -t 1:00:00
+#SBATCH -t 6:00:00
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=24
 import sys, os
@@ -10,8 +10,8 @@ sys.path.append(os.popen("pwd").read().replace("\n",""))
 sys.path.append(os.popen("pwd").read().replace("\n","")+"/Model")
 #-------------------------
 import pldm as method
-import OneDLinearSpecA as model
-stype = 'focused'
+import CoupledDimerA as model
+stype = 'sampled'
 #-------------------------
 from multiprocessing import Pool
 import time 

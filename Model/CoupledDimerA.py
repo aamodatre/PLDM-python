@@ -9,17 +9,23 @@ from scipy import constants as sc
 
 class parameters():
    ESteps = 20
-   NSteps = 42000 #int(2*10**6)
-   NTraj = 1200
-   dtN = 1
+   NSteps = 10500 #int(2*10**6)
+   NTraj = 25
+   dtN = 4.
    dtE = dtN/ESteps
-   nskip = 1
+   nskip = 10
    NStates = 4
    
-   # cj and ωj is an array of dimensions (400,1)
+   # cj and ωj is an array of dimensions (100,1)
    cj = np.loadtxt("/scratch/aatre3/NAMD/PLDM-python/Discretization/cj.txt")
    ωj = np.loadtxt("/scratch/aatre3/NAMD/PLDM-python/Discretization/ωj.txt")
-   ndof = len(cj)
+   ω = np.zeros((2*len(ωj)))
+   c = np.zeros((2*len(cj)))
+   ω[0:100] = ωj
+   ω[100:200] = ωj
+   c[0:100] = cj
+   c[100:200] = cj
+   ndof = int(len(c))
 
    """ Temporary derivation """
    # Tr[µ(t) µ(0) p(0)]
@@ -29,41 +35,42 @@ class parameters():
    # = TrB[   (TrE[µ(t) µ(0) |0><0|] -  TrE[µ(t) |0><0|  µ(0) ]).pB]
    # TrE[µ(t) (µ01|1><0| +  µ02|2><0|) ] - TrE[µ(t) (µ01|0><1| +  µ02|0><2|) ]
 
-   initStatef = 2
-   initStateb = 2
+   # initStatef = 2
+   # initStateb = 2
+   initState = 1
 
    Eh2c = 219474.6313632   # Hartree -> cm inverse
    
    M = 1          # """Needs to be confirmed"""
-   ωc = 18/Eh2c   # 18 cm-1 in Hartree
-   λ = 50/Eh2c    # 50 cm-1 in Hartree
+   ωc = 18.0/Eh2c   # 18 cm-1 in Hartree
 
 def Hel(R):
    
    N = parameters.NStates
-   cj = parameters.cj
-   ωj = parameters.ωj
+   cj = parameters.c
+   ωj = parameters.ω
    ωc = parameters.ωc
-   λ = parameters.λ
    m = parameters.M
    Eh2c = parameters.Eh2c
 
    # On-Site Energies:
-   ε = np.array([0,-50,+50, 0], dtype = np.float64)
-   ε_bar = 10000/Eh2c  # in cm-1
+   ε = np.array([50,-50], dtype = np.float64)/Eh2c
+   ε_bar = 10000.0/Eh2c  # in cm-1
 
    VConst= np.zeros((N, N), dtype=np.float64)
-   for i in range(len(VConst)):
-      VConst[i,i] = ε_bar + (ε[i])/Eh2c
-   VConst[-1,-1] = 2*ε_bar
+   VConst[0,0] = 0                           # State 00
+   VConst[1,1] = ε_bar + ε[0]                # State 01
+   VConst[2,2] = ε_bar + ε[1]                # State 10
+   VConst[3,3] = 2*ε_bar + ε[0] + ε[1]       # State 11
    # Diabatic Couplings
-   VConst[1,2] = VConst[2,1] = 100/Eh2c
+   VConst[1,2] = 100.0/Eh2c                    # J-10
+   VConst[2,1] = 100.0/Eh2c                    # J-01
    
    VCouple = np.zeros((N,N), dtype = np.float64)
  
-   VCouple[1,1] = np.sum(cj[100:200]*R[100:200])
-   VCouple[2,2] = np.sum(cj[200:300]*R[200:300])
-   VCouple[3,3] = np.sum(cj[300:400]*R[300:400])
+   VCouple[1,1] = np.sum(cj[0:100]*R[0:100])
+   VCouple[2,2] = np.sum(cj[100:200]*R[100:200])
+   VCouple[3,3] = np.sum(cj*R)
 
    VMat = VConst + VCouple #+ VBath
 
@@ -74,35 +81,33 @@ def Hel(R):
 
 def  dHel(R):
    N = parameters.NStates
-   cj = parameters.cj
-   ωj = parameters.ωj
+   cj = parameters.c
+   ωj = parameters.ω
    ndof =  parameters.ndof
    dVij = np.zeros((N,N,ndof), dtype = np.float64)
 
-   # state 00
-   dVij[0,0,0:ndof] = 0 
    # state 01
-   dVij[1,1,100:200] = cj[100:200]
+   dVij[1,1,0:100] = cj[0:100]
    # state 10
-   dVij[2,2,200:300] = cj[200:300]
+   dVij[2,2,100:] = cj[100:]
    # state 11
-   dVij[3,3,300:400] = cj[300:400]
+   dVij[3,3,:] = cj
 
    return dVij
 
 def dHel0(R):
-   ωj = parameters.ωj
+   ωj = parameters.ω
    return (ωj**2.0) * R
 
 def initR():
    R0 = 0.0
    P0 = 0.0
 
-   ω = parameters.ωj
+   ω = parameters.ω
    T = 300 # Kelvin
-   Eh2J = 4.3597447222071e-18
-   β = (T*sc.k/Eh2J)**(-1) # 300 K == 1052.8
-    
+   # Eh2J = 4.3597447222071e-18
+   # β = (T*sc.k/Eh2J)**(-1) # 300 K == 1052.8
+   β = 1052.583416013556
    sigP = np.sqrt( ω / ( 2 * np.tanh( 0.5*β*ω ) ) )
    sigR = sigP/ω
    
