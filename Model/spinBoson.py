@@ -28,10 +28,12 @@ def bathParam(ξ, ωc, ndof):
 
 
 class parameters():
+
    NSteps = 200 #int(2*10**6)
+   ESteps = 20
    NTraj = 200
    dtN = 0.01
-   dtE = dtN/20
+   dtE = dtN/ESteps
    NStates = 2
    M = 1
    initState = 0

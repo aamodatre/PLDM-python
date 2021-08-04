@@ -98,7 +98,6 @@ def VelVer(dat) :
     for t in range(EStep):
         zF = Umap(zF, par.dtE/2, dat.Hij)
         zB = Umap(zB, par.dtE/2, dat.Hij)
-        dat.rho[:,:,dat.istep*dat.param.ESteps*2 + t] =  pop(dat)
     dat.zF, dat.zB = zF * 1, zB * 1 
 
     # ======= Nuclear Block ==================================
@@ -118,10 +117,11 @@ def VelVer(dat) :
     
     # half-step mapping
     dat.Hij = par.Hel(dat.R) # do QM
+
+
     for t in range(EStep):
         zF = Umap(zF, par.dtE/2, dat.Hij)
         zB = Umap(zB, par.dtE/2, dat.Hij)
-        dat.rho[:,:,dat.istep*dat.param.ESteps*2 + t + dat.param.ESteps] =  pop(dat)
     dat.zF, dat.zB = zF * 1, zB * 1 
     
 
@@ -137,12 +137,11 @@ def VelVer(dat) :
 
 def pop(dat):
     NStates = dat.param.NStates
-    iState = dat.param.initStatef
-    jState = dat.param.initStateb
+    iState = dat.param.initState
     rho = np.zeros((NStates,NStates),dtype=complex)
     γ = dat.gw * dat.Ugam
 
-    rhoF = ( dat.zB[:].conjugate() * dat.zB0 - γ[:,jState].conjugate())
+    rhoF = ( dat.zB[:].conjugate() * dat.zB0 - γ[:,iState].conjugate())
     rhoB = ( dat.zF[:] * dat.zF0.conjugate() - γ[:,iState] )
 
     return 0.25 * np.outer(rhoF, rhoB)
@@ -158,9 +157,7 @@ def runTraj(parameters):
     NSteps = parameters.NSteps
     NTraj = parameters.NTraj
     NStates = parameters.NStates
-    initStatef = parameters.initStatef
-    initStateb = parameters.initStateb
-    # initState = parameters.initState # intial state
+    initState = parameters.initState # intial state
     stype = parameters.stype
     nskip = parameters.nskip
     #---------------------------
@@ -170,30 +167,25 @@ def runTraj(parameters):
         pl = 1
     rho_ensemble = np.zeros((NStates,NStates,NSteps//nskip + pl), dtype=complex)
 
+
     #---------------------------
     # Ensemble
     for itraj in range(NTraj): 
-        
-
       # Stype (Forward-Backward combinations)
-    #   if stype == "sampled":
-    #     FB = [[initState,i] for i in range(NStates)]
+      if stype == "sampled":
+        FB = [[initState,i] for i in range(NStates)]
 
-    #   if stype == "focused":
-    #     FB = [[initState,initState]]
-
-        FB = [[i,j] for i in range(NStates) for j in range(NStates)]
+      if stype == "focused":
+        FB = [[initState,initState]]
       #---------------------------------------
-        for iFB in FB:
-            # weight for this trajectory
-            F, B = iFB[0], iFB[1]
-        # W = 1.0 + (F!=B) * 1.0 
-        W = 1.0
+      for iFB in FB:
+        # weight for this trajectory
+        F, B = iFB[0], iFB[1]
+        W = 1.0 + (F!=B) * 1.0 
  
         gw = (2/NStates) * (np.sqrt(NStates + 1) - 1)
         # Trajectory data
         dat = Bunch(param =  parameters, gw = gw)
-        dat.rho = rho_ensemble*0
         dat.Ugam = np.identity(NStates)
 
         # initialize R, P
@@ -203,11 +195,12 @@ def runTraj(parameters):
         vv  = VelVer
  
         # Call function to initialize mapping variables
-        #    various 
+ 
+        # various 
         dat.zF, dat.zB  = initMapping(NStates, F, B) 
 
         # Set initial values of fictitious oscillator variables for future use
-        dat.zF0, dat.zB0 =  dat.zF[initStatef], dat.zB[initStateb]
+        dat.zF0, dat.zB0 =  dat.zF[initState], dat.zB[initState]
 
         #----- Initial QM --------
         dat.Hij  = parameters.Hel(dat.R)
@@ -216,14 +209,12 @@ def runTraj(parameters):
         #----------------------------
         iskip = 0  
         for i in range(NSteps): # One trajectory
-            dat.istep = i
-            # #------- ESTIMATORS-------------------------------------
-            # if (i % nskip == 0):
-            #     rho_ensemble[:,:,iskip] += pop(dat) * W
-            #     iskip += 1
-            # #-------------------------------------------------------
+            #------- ESTIMATORS-------------------------------------
+            if (i % nskip == 0):
+                rho_ensemble[:,:,iskip] += pop(dat) * W
+                iskip += 1
+            #-------------------------------------------------------
             dat = vv(dat)
-        rho_ensemble += dat.rho
 
     return rho_ensemble
 
@@ -249,3 +240,4 @@ if __name__ == "__main__":
             PiiFile.write(str(rho_ensemble[i,i,t].real / NTraj) + "\t")
         PiiFile.write("\n")
     PiiFile.close()
+

@@ -9,11 +9,11 @@ from scipy import constants as sc
 
 class parameters():
    ESteps = 20
-   NSteps = 10500 #int(2*10**6)
-   NTraj = 25
-   dtN = 4.
+   NSteps = 2481 #int(2*10**6)
+   NTraj = 350
+   dtN = 5.
    dtE = dtN/ESteps
-   nskip = 10
+   nskip = 1
    NStates = 4
    
    # cj and ωj is an array of dimensions (100,1)
@@ -27,21 +27,12 @@ class parameters():
    c[100:200] = cj
    ndof = int(len(c))
 
-   """ Temporary derivation """
-   # Tr[µ(t) µ(0) p(0)]
-   # |0>, |1> , |2> , |3>
-   # µ(0) = µ01(|0><1| + |1><0|)  + µ02(|0><2| + |2><0|) 
-   # p(0) = |0><0| . pB
-   # = TrB[   (TrE[µ(t) µ(0) |0><0|] -  TrE[µ(t) |0><0|  µ(0) ]).pB]
-   # TrE[µ(t) (µ01|1><0| +  µ02|2><0|) ] - TrE[µ(t) (µ01|0><1| +  µ02|0><2|) ]
-
-   # initStatef = 2
-   # initStateb = 2
-   initState = 1
+   initStatef = 1
+   initStateb = 0
 
    Eh2c = 219474.6313632   # Hartree -> cm inverse
    
-   M = 1          # """Needs to be confirmed"""
+   M = 1
    ωc = 18.0/Eh2c   # 18 cm-1 in Hartree
 
 def Hel(R):

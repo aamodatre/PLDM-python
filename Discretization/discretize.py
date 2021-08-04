@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 def J(ω):
     ωc = 0.000082014 # 18 cm-1 in Hartree
     # λ = 0.000045563 # 10 cm-1 in Hartree
-    λ = 0.00022782 # 50 cm-1 in Hartree
-    # λ = 0.00068345 # 150 cm-1 in Hartree
+    # λ = 0.00022782 # 50 cm-1 in Hartree
+    λ = 0.00068345 # 150 cm-1 in Hartree
     return 2*λ*((ω/ωc)/ (1+(ω/ωc)**2))
 
 def getParameters(N, Jω):
@@ -14,8 +14,8 @@ def getParameters(N, Jω):
     # Spectral Density Parameters
     ωc = 0.000082014 # 18 cm-1 in Hartree
     # λ = 0.000045563 # 10 cm-1 in Hartree
-    λ = 0.00022782 # 50 cm-1 in Hartree
-    # λ = 0.00068345 # 150 cm-1 in Hartree
+    # λ = 0.00022782 # 50 cm-1 in Hartree
+    λ = 0.00068345 # 150 cm-1 in Hartree
 
     # Frequencies considered
     ω = np.linspace(0.00000001,250*ωc,30000) # upper limit -

@@ -39,11 +39,11 @@ def initMapping(Nstates, initStatef = 0, initStateb = 0, stype = "focused"):
         pF[initStatef] = 1.0
         pB[initStateb] = -1.0 # This minus sign allows for backward motion of fictitious oscillator
         
-    # elif (stype == "sampled"):
-    #    qF = np.array([ np.random.normal() for i in range(Nstates)]) 
-    #    qB = np.array([ np.random.normal() for i in range(Nstates)]) 
-    #    pF = np.array([ np.random.normal() for i in range(Nstates)]) 
-    #    pB = np.array([ np.random.normal() for i in range(Nstates)]) 
+    elif (stype == "sampled"):
+       qF = np.array([ np.random.normal() for i in range(Nstates)]) 
+       qB = np.array([ np.random.normal() for i in range(Nstates)]) 
+       pF = np.array([ np.random.normal() for i in range(Nstates)]) 
+       pB = np.array([ np.random.normal() for i in range(Nstates)]) 
     return qF, qB, pF, pB 
 
 def Umap(qF, qB, pF, pB, dt, VMat):
@@ -162,7 +162,7 @@ def runTraj(parameters):
 
         # Call function to initialize mapping variables
         dat.qF, dat.qB, dat.pF, dat.pB = initMapping(NStates, initStatef, initStateb, stype) 
-
+        
         # Set initial values of fictitious oscillator variables for future use
         qF0, qB0, pF0, pB0 = dat.qF[initStatef], dat.qB[initStateb], dat.pF[initStatef], dat.pB[initStateb] 
         dat.rho0 = 0.25 * (qF0 - 1j*pF0) * (qB0 + 1j*pB0)

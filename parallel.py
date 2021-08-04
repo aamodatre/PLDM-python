@@ -77,7 +77,7 @@ for i in range(procs):
 # PiiFile = open(f"{fold}/Pii.txt","w") 
 # NTraj = model.parameters().NTraj
 # for t in range(rho_ensemble[0].shape[-1]):
-#     PiiFile.write(f"{t * model.parameters.nskip * model.parameters.dtN} \t")
+#     PiiFile.write(f"{t * model.parameters.nskip * model.parameters.dtE/2} \t")
 #     for i in range(NStates):
 #         PiiFile.write(str(rho_sum[i,i,t].real / (  procs * NTraj ) ) + "\t")
 #     PiiFile.write("\n")
