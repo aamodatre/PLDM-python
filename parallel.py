@@ -11,7 +11,8 @@ sys.path.append(os.popen("pwd").read().replace("\n","")+"/Model")
 #-------------------------
 import pldm as method
 import CoupledDimerA as model
-stype = 'sampled'
+# stype = 'sampled'
+stype = "focused"
 #-------------------------
 from multiprocessing import Pool
 import time 

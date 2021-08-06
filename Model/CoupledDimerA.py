@@ -10,6 +10,7 @@ from scipy import constants as sc
 class parameters():
    ESteps = 20
    NSteps = 2481 #int(2*10**6)
+   # NSteps = 8269 #int(2*10**6)
    NTraj = 350
    dtN = 5.
    dtE = dtN/ESteps
@@ -27,7 +28,7 @@ class parameters():
    c[100:200] = cj
    ndof = int(len(c))
 
-   initStatef = 1
+   initStatef = 2
    initStateb = 0
 
    Eh2c = 219474.6313632   # Hartree -> cm inverse

@@ -156,6 +156,7 @@ def runTraj(parameters):
     #------------------------------------
     ## Parameters -------------
     NSteps = parameters.NSteps
+    ESteps = parameters.ESteps
     NTraj = parameters.NTraj
     NStates = parameters.NStates
     initStatef = parameters.initStatef
@@ -168,7 +169,7 @@ def runTraj(parameters):
         pl = 0
     else :
         pl = 1
-    rho_ensemble = np.zeros((NStates,NStates,NSteps//nskip + pl), dtype=complex)
+    rho_ensemble = np.zeros((NStates,NStates,NSteps*ESteps*2//nskip + pl), dtype=complex)
 
     #---------------------------
     # Ensemble
