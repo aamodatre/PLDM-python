@@ -98,8 +98,8 @@ def VelVer(dat) :
     for t in range(EStep):
         zF = Umap(zF, par.dtE/2, dat.Hij)
         zB = Umap(zB, par.dtE/2, dat.Hij)
+        dat.zF, dat.zB = zF * 1, zB * 1 
         dat.rho[:,:,dat.istep*dat.param.ESteps*2 + t] =  pop(dat)
-    dat.zF, dat.zB = zF * 1, zB * 1 
 
     # ======= Nuclear Block ==================================
     F1    =  Force(dat) # force with {qF(t+dt/2)} * dH(R(t))
@@ -121,8 +121,8 @@ def VelVer(dat) :
     for t in range(EStep):
         zF = Umap(zF, par.dtE/2, dat.Hij)
         zB = Umap(zB, par.dtE/2, dat.Hij)
+        dat.zF, dat.zB = zF * 1, zB * 1 
         dat.rho[:,:,dat.istep*dat.param.ESteps*2 + t + dat.param.ESteps] =  pop(dat)
-    dat.zF, dat.zB = zF * 1, zB * 1 
     
 
     #---- Propagate Ugamma ----------
@@ -161,7 +161,7 @@ def runTraj(parameters):
     NStates = parameters.NStates
     initStatef = parameters.initStatef
     initStateb = parameters.initStateb
-    # initState = parameters.initState # intial state
+    # initState = parameters.initState # initial state
     stype = parameters.stype
     nskip = parameters.nskip
     #---------------------------
@@ -188,43 +188,43 @@ def runTraj(parameters):
         for iFB in FB:
             # weight for this trajectory
             F, B = iFB[0], iFB[1]
-        # W = 1.0 + (F!=B) * 1.0 
-        W = 1.0
- 
-        gw = (2/NStates) * (np.sqrt(NStates + 1) - 1)
-        # Trajectory data
-        dat = Bunch(param =  parameters, gw = gw)
-        dat.rho = rho_ensemble*0
-        dat.Ugam = np.identity(NStates)
+            # W = 1.0 + (F!=B) * 1.0 
+            W = 1.0
+    
+            gw = (2/NStates) * (np.sqrt(NStates + 1) - 1)
+            # Trajectory data
+            dat = Bunch(param =  parameters, gw = gw)
+            dat.rho = rho_ensemble*0
+            dat.Ugam = np.identity(NStates)
 
-        # initialize R, P
-        dat.R, dat.P = parameters.initR()
+            # initialize R, P
+            dat.R, dat.P = parameters.initR()
 
-        # set propagator
-        vv  = VelVer
- 
-        # Call function to initialize mapping variables
-        #    various 
-        dat.zF, dat.zB  = initMapping(NStates, F, B) 
+            # set propagator
+            vv  = VelVer
+    
+            # Call function to initialize mapping variables
+            #    various 
+            dat.zF, dat.zB  = initMapping(NStates, F, B) 
 
-        # Set initial values of fictitious oscillator variables for future use
-        dat.zF0, dat.zB0 =  dat.zF[initStatef], dat.zB[initStateb]
+            # Set initial values of fictitious oscillator variables for future use
+            dat.zF0, dat.zB0 =  dat.zF[initStatef], dat.zB[initStateb]
 
-        #----- Initial QM --------
-        dat.Hij  = parameters.Hel(dat.R)
-        dat.dHij = parameters.dHel(dat.R)
-        dat.dH0  = parameters.dHel0(dat.R)
-        #----------------------------
-        iskip = 0  
-        for i in range(NSteps): # One trajectory
-            dat.istep = i
-            # #------- ESTIMATORS-------------------------------------
-            # if (i % nskip == 0):
-            #     rho_ensemble[:,:,iskip] += pop(dat) * W
-            #     iskip += 1
-            # #-------------------------------------------------------
-            dat = vv(dat)
-        rho_ensemble += dat.rho
+            #----- Initial QM --------
+            dat.Hij  = parameters.Hel(dat.R)
+            dat.dHij = parameters.dHel(dat.R)
+            dat.dH0  = parameters.dHel0(dat.R)
+            #----------------------------
+            iskip = 0  
+            for i in range(NSteps): # One trajectory
+                dat.istep = i
+                # #------- ESTIMATORS-------------------------------------
+                # if (i % nskip == 0):
+                #     rho_ensemble[:,:,iskip] += pop(dat) * W
+                #     iskip += 1
+                # #-------------------------------------------------------
+                dat = vv(dat)
+            rho_ensemble += dat.rho
 
     return rho_ensemble
 
