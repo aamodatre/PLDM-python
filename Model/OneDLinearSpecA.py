@@ -8,13 +8,13 @@ import numpy as np
 class parameters():
    ESteps = 20
    NSteps = 1000 #int(2*10**6)
-   NTraj = 1000
+   NTraj = 2000
    dtN = 1
    dtE = dtN/ESteps
    NStates = 2
    M = 1728.26
-   initStatef = 1
-   initStateb = 0
+   initStatef = 0
+   initStateb = 1
    nskip = 1
    ωg = 0.013669
    ωe = 0.99*ωg

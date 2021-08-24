@@ -9,14 +9,14 @@ from scipy import constants as sc
 
 class parameters():
    ESteps = 20
-   # NSteps = 2481
-   NSteps = 8269
-   NTraj = 10 # 350
+   NSteps = 2481 # For Spectroscopy simulation
+   # NSteps = 8269 # For Populations simulation
+   NTraj = 350
    dtN = 5.
    dtE = dtN/ESteps
    nskip = 1
-   # NStates = 4
-   NStates = 3
+   NStates = 4
+   # NStates = 3
    
    # cj and ωj is an array of dimensions (100,1)
    cj = np.loadtxt("/scratch/aatre3/NAMD/PLDM-python/Discretization/cj.txt")
@@ -29,12 +29,11 @@ class parameters():
    c[100:200] = cj
    ndof = int(len(c))
 
-   initStatef = 1
-   initStateb = 1
+   initStatef = 2
+   initStateb = 0
 
-   Eh2c = 219474.6313632   # Hartree -> cm inverse
-   
    M = 1
+   Eh2c = 219474.6313632   # Hartree -> cm inverse
    ωc = 18.0/Eh2c   # 18 cm-1 in Hartree
 
 def Hel(R):
@@ -54,7 +53,7 @@ def Hel(R):
    VConst[0,0] = 0                           # State 00
    VConst[1,1] = ε_bar + ε[0]                # State 01
    VConst[2,2] = ε_bar + ε[1]                # State 10
-   # VConst[3,3] = 2*ε_bar + ε[0] + ε[1]       # State 11
+   VConst[3,3] = 2*ε_bar + ε[0] + ε[1]       # State 11
    # Diabatic Couplings
    VConst[1,2] = 100.0/Eh2c                    # J-10
    VConst[2,1] = 100.0/Eh2c                    # J-01
@@ -63,7 +62,7 @@ def Hel(R):
  
    VCouple[1,1] = np.sum(cj[0:100]*R[0:100])
    VCouple[2,2] = np.sum(cj[100:200]*R[100:200])
-   # VCouple[3,3] = np.sum(cj*R)
+   VCouple[3,3] = np.sum(cj*R)
 
    VMat = VConst + VCouple #+ VBath
 
@@ -84,7 +83,7 @@ def  dHel(R):
    # state 10
    dVij[2,2,100:] = cj[100:]
    # state 11
-   # dVij[3,3,:] = cj
+   dVij[3,3,:] = cj
 
    return dVij
 

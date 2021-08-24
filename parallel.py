@@ -2,7 +2,7 @@
 #SBATCH -p action 
 #SBATCH -o output.log
 #SBATCH --mem-per-cpu=1GB
-#SBATCH -t 6:00:00
+#SBATCH -t 12:00:00
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=24
 import sys, os
