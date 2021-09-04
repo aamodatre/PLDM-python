@@ -8,7 +8,7 @@ import numpy as np
 class parameters():
    ESteps = 20
    NSteps = 1000 #int(2*10**6)
-   NTraj = 2000
+   NTraj = 350
    dtN = 1
    dtE = dtN/ESteps
    NStates = 2
@@ -16,17 +16,17 @@ class parameters():
    initStatef = 0
    initStateb = 1
    nskip = 1
-   ωg = 0.013669
+   ωg = 0.013669 # 3000 cm-1 in Hartree
    ωe = 0.99*ωg
    D = 0.2
-   epsilon = 5
+   epsilon = 5.0
 
 def Hel(R):
     ωg = parameters.ωg
     ωe = parameters.ωe
     D = parameters.D
     m = parameters.M
-    epsilon = 5
+    epsilon = 5.0
 
     VMat = np.zeros((2,2))
     VMat[0,0] = 0.5*m*(ωg**2)*(R**2)
@@ -44,6 +44,7 @@ def dHel(R):
 
     dVMat = np.zeros((2,2,1))
     # dVMat[0,0,0] = m*(ωg**2)*(R)
+    # dVMat[1,1,0] = m*(ωe**2)*((R-D))
     dVMat[1,1,0] = m*(ωe**2)*((R-D)) - m*(ωg**2)*(R)
     
     return dVMat
